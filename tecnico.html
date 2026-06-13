@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="SIGSLAB - Portal Técnico">
+    <meta name="author" content="SIGSLAB Team">
+
+    <title>SIGSLAB - Portal Técnico</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/sigslab.css" rel="stylesheet">
+    <style>
+        .textarea-custom {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .ticket-card {
+            border: none;
+            border-left: 4px solid #ddd;
+            background-color: #fff;
+            border-radius: 0.35rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ticket-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+        }
+        .border-left-warning {
+            border-left-color: #f6c23e !important;
+        }
+        .border-left-primary {
+            border-left-color: #4e73df !important;
+        }
+        .border-left-brand {
+            border-left-color: var(--primary-color, #701618) !important;
+        }
+        .badge-danger-soft {
+            background-color: #fadbd8;
+            color: #e74a3b;
+        }
+        .badge-success-soft {
+            background-color: #d4efdf;
+            color: #1cc88a;
+        }
+        .scrollable-col {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .scrollable-col::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollable-col::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .scrollable-col::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        .empty-slot-card {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.35rem;
+            background-color: #fff;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            transition: all 0.2s ease-in-out;
+        }
+        .empty-slot-card:hover {
+            border-color: #701618;
+            background-color: #fef2f2;
+            color: #701618;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="tecnico.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SIGSLAB <sup>Técnico</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="tecnico.html">
+                    <i class="fas fa-fw fa-clipboard-list"></i>
+                    <span>Mi Bandeja</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Gestión
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" href="tecnico-historial.html">
+                    <i class="fas fa-fw fa-history"></i>
+                    <span>Historial de Tickets</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Title -->
+                    <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Mi Bandeja</h5>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="userNameDisplay">Técnico</span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#" id="btnLogoutBtn">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <button class="btn btn-sm btn-light border shadow-sm font-weight-bold ml-auto" onclick="loadTecnicoTickets()"><i class="fas fa-sync-alt text-success mr-1"></i> Sincronizar</button>
+                    </div>
+
+
+
+                    <!-- Alert placeholder -->
+                    <div id="alertPlaceholder"></div>
+
+                    <!-- Single Grid Layout: Tablero de Tickets Pendientes (Capacidad hasta 12) -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-warning"><i class="fas fa-clock mr-2"></i>Tickets Asignados Pendientes (<span id="countPending">0</span> / 12)</h6>
+                            <small class="text-muted font-weight-bold"><i class="fas fa-info-circle mr-1"></i>Capacidad Máxima: 12 tickets activos</small>
+                        </div>
+                        <div class="card-body" style="background-color: #f8f9fc;">
+                            <div class="row" id="ticketsGrid">
+                                <!-- Dynamic Grid Cards (active tickets only) -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="emptyInboxMsg" class="text-center py-5 text-muted d-none">
+                        <i class="fas fa-inbox fa-3x mb-3 text-gray-400"></i>
+                        <h5>¡Bandeja de Trabajo Vacía!</h5>
+                        <p class="m-0">No tienes ningún ticket de soporte técnico asignado activo en este momento.</p>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>SIGSLAB MVP 1 &copy; 2026</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Detail Information Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content shadow-lg border-left-info">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-info" id="infoModalLabel"><i class="fas fa-info-circle mr-2"></i>Detalle Completo del Ticket</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%;">ID del Ticket</th>
+                            <td id="infoTicketId" class="font-weight-bold text-primary"></td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de Requerimiento</th>
+                            <td id="infoType"></td>
+                        </tr>
+                        <tr>
+                            <th>Laboratorio</th>
+                            <td id="infoLab"></td>
+                        </tr>
+                        <tr>
+                            <th>Equipo Afectado</th>
+                            <td id="infoPc" class="font-weight-bold text-dark"></td>
+                        </tr>
+                        <tr>
+                            <th>Descripción del Reporte</th>
+                            <td id="infoDesc" style="white-space: pre-wrap;"></td>
+                        </tr>
+                        <tr>
+                            <th>Reportado por (Docente)</th>
+                            <td id="infoCreator"></td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Registro</th>
+                            <td id="infoDate"></td>
+                        </tr>
+                        <tr>
+                            <th>Estado Actual</th>
+                            <td id="infoStatus"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close Ticket Modal (RF03 / Finalizar Proceso) -->
+    <div class="modal fade" id="closeTicketModal" tabindex="-1" role="dialog" aria-labelledby="closeTicketModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-left-success shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-success" id="closeTicketModalLabel"><i class="fas fa-check-double mr-2"></i>Registrar Cierre de Ticket</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="closeTicketForm">
+                    <div class="modal-body">
+                        <div class="alert alert-info py-2" style="font-size: 0.85rem;">
+                            <i class="fas fa-info-circle mr-1"></i> Detalle a continuación las acciones correctivas y de mantenimiento realizadas para dar solución definitiva a este ticket.
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-gray-700">ID del Ticket:</label>
+                            <input type="text" class="form-control font-weight-bold" id="closeTicketId" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-gray-700">Acción Correctiva Realizada:</label>
+                            <textarea class="form-control textarea-custom" id="closeCorrectiveAction" rows="10" placeholder="Escriba aquí la bitácora del mantenimiento, instalación o reparación..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success font-weight-bold" type="submit">
+                            <i class="fas fa-check-circle mr-1"></i> Guardar y Finalizar Atención
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- SIGSLAB Core Logic -->
+    <script src="js/sigslab.js"></script>
+
+    <script>
+        // Check role auth
+        const user = window.SIGSLAB.checkAuth('tecnico');
+
+        $(document).ready(function() {
+            if (user) {
+                $('#userNameDisplay').text(user.name);
+            }
+
+            // Load active tickets
+            loadTecnicoTickets();
+
+            // Handle Logout
+            $('#btnLogoutBtn').click(function(e) {
+                e.preventDefault();
+                window.SIGSLAB.logout();
+            });
+
+            // Form Submit Close Ticket
+            $('#closeTicketForm').submit(function(e) {
+                e.preventDefault();
+                const ticketId = $('#closeTicketId').val();
+                const correctiveAction = $('#closeCorrectiveAction').val();
+
+                const success = window.SIGSLAB.closeTicket(ticketId, correctiveAction);
+                if (success) {
+                    $('#closeTicketModal').modal('hide');
+                    showAlert('success', `El ticket <strong>${ticketId}</strong> ha sido cerrado correctamente con estado <strong>Finalizado</strong>.`);
+                    loadTecnicoTickets();
+                } else {
+                    showAlert('danger', 'Ocurrió un error al procesar el cierre del ticket.');
+                }
+            });
+        });
+
+        // Load active tickets assigned to this technician (up to 12 tickets)
+        function loadTecnicoTickets() {
+            const tickets = window.SIGSLAB.getTickets();
+            // Filter tickets assigned to this technician which are active (Asignado)
+            const activeTickets = tickets.filter(t => t.assignedTo === user.name && t.status === 'Asignado');
+
+            const ticketsGrid = $('#ticketsGrid').empty();
+            const totalSlots = 12;
+
+            if (activeTickets.length === 0) {
+                $('#ticketsGrid').closest('.card').addClass('d-none');
+                $('#emptyInboxMsg').removeClass('d-none');
+            } else {
+                $('#ticketsGrid').closest('.card').removeClass('d-none');
+                $('#emptyInboxMsg').addClass('d-none');
+
+                const activeCount = Math.min(activeTickets.length, totalSlots);
+
+                // Render active tickets
+                for (let i = 0; i < activeCount; i++) {
+                    const t = activeTickets[i];
+                    let typeBadge = t.type === 'Incidente' 
+                        ? '<span class="badge badge-pill badge-danger-soft text-danger font-weight-bold"><i class="fas fa-bug mr-1"></i>Incidente</span>'
+                        : '<span class="badge badge-pill badge-success-soft text-success font-weight-bold"><i class="fas fa-code mr-1"></i>Software</span>';
+
+                    let borderClass = 'border-left-brand';
+                    
+                    const actionsHtml = `
+                        <div class="row no-gutters mt-auto pt-3">
+                            <div class="col-6 pr-1">
+                                <button class="btn btn-sm btn-info btn-block font-weight-bold" onclick="showTicketDetail('${t.id}')">
+                                    <i class="fas fa-info-circle mr-1"></i> Ver Info
+                                </button>
+                            </div>
+                            <div class="col-6 pl-1">
+                                <button class="btn btn-sm btn-success btn-block font-weight-bold" onclick="openCloseModal('${t.id}')">
+                                    <i class="fas fa-check mr-1"></i> Cerrar Ticket
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    const cardHtml = `
+                        <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+                            <div class="card ticket-card shadow-sm w-100 ${borderClass}">
+                                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small font-weight-bold text-gray-500">${t.id}</span>
+                                            ${typeBadge}
+                                        </div>
+                                        <h6 class="font-weight-bold text-gray-800 mb-1">${t.lab}</h6>
+                                        <p class="small text-muted mb-2">Equipo: <code>${t.pc}</code></p>
+                                        <p class="small text-gray-700 mb-2" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.5rem;" title="${t.description}">${t.description}</p>
+                                        <div class="small text-gray-500 mb-2"><i class="far fa-clock mr-1"></i>Reportado: ${t.createdDate}</div>
+                                    </div>
+                                    ${actionsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    ticketsGrid.append(cardHtml);
+                }
+            }
+
+            $('#countPending').text(activeTickets.length);
+        }
+
+        // Action: Open Close Ticket Modal (Finalizar Proceso)
+        function openCloseModal(ticketId) {
+            $('#closeTicketId').val(ticketId);
+            $('#closeCorrectiveAction').val('');
+            $('#closeTicketModal').modal('show');
+        }
+
+        // Show ticket detail modal
+        function showTicketDetail(ticketId) {
+            const tickets = window.SIGSLAB.getTickets();
+            const t = tickets.find(x => x.id === ticketId);
+            if (t) {
+                $('#infoTicketId').text(t.id);
+                $('#infoType').html(t.type === 'Incidente' ? '<span class="badge badge-danger">Incidente</span>' : '<span class="badge badge-success">Instalación de Software</span>');
+                $('#infoLab').text(t.lab);
+                $('#infoPc').text(t.pc);
+                $('#infoDesc').text(t.description);
+                $('#infoCreator').text(t.creator);
+                $('#infoDate').text(t.createdDate);
+                
+                let statusBadge = '';
+                if (t.status === 'Pendiente') statusBadge = '<span class="badge badge-ticket-pendiente">Pendiente</span>';
+                else if (t.status === 'Asignado') statusBadge = '<span class="badge badge-ticket-asignado">Asignado</span>';
+                else if (t.status === 'Finalizado') statusBadge = '<span class="badge badge-ticket-finalizado">Finalizado</span>';
+                
+                $('#infoStatus').html(statusBadge);
+                $('#infoModal').modal('show');
+            }
+        }
+
+        // Show feedback alerts
+        function showAlert(type, message) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#alertPlaceholder').html(alertHtml);
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+        }
+    </script>
+</body>
+
+</html>

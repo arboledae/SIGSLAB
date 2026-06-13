@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SIGSLAB - Redireccionando...</title>
+    <script>
+        // Check session and redirect accordingly
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        if (currentUser) {
+            if (currentUser.role === "docente") {
+                window.location.href = "docente.html";
+            } else if (currentUser.role === "jefe-soporte") {
+                window.location.href = "jefe-soporte.html";
+            } else if (currentUser.role === "tecnico") {
+                window.location.href = "tecnico.html";
+            } else {
+                window.location.href = "login.html";
+            }
+        } else {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body>
+    <p style="font-family: sans-serif; text-align: center; margin-top: 50px; color: #555;">
+        Cargando SIGSLAB...
+    </p>
+</body>
+</html>
