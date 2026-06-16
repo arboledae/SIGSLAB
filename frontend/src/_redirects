@@ -1,0 +1,5 @@
+# Redirigir todas las llamadas del frontend a la API del backend en Render (reemplaza por tu URL de Render)
+/api/* https://sigslab-backend-xxxx.onrender.com/api/:splat 200
+
+# Redirigir todas las demás rutas a index.html para permitir el ruteo interno de Angular
+/* /index.html 200
