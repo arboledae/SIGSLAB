@@ -1,0 +1,3 @@
+# Redirigir todas las rutas a index.html para permitir el ruteo interno de Angular
+/* /index.html 200
+
