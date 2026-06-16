@@ -1,1 +1,45 @@
-node_modules
+# Compiled output
+dist/
+**/dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Node dependencies
+node_modules/
+**/node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and Editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/
+**/.vscode/
+.history/
+**/.history/
+
+# Angular cache
+.angular/
+**/.angular/
+
+# Miscellaneous
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment Secrets (DO NOT COMMIT)
+.env
+.env.*
+!.env.template

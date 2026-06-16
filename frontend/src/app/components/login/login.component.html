@@ -1,0 +1,55 @@
+<div class="bg-login-gradient" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5" style="border-radius: 1rem; overflow: hidden;">
+          <div class="card-body p-0">
+            <div class="p-5">
+              <div class="text-center mb-4">
+                <div class="sidebar-brand-icon rotate-n-15 text-primary mb-2" style="font-size: 3rem;">
+                  <i class="fas fa-tools"></i>
+                </div>
+                <h1 class="h3 text-gray-900 font-weight-bold">SIGSLAB</h1>
+                <p class="text-muted">Sistema Integral de Gestión de Soporte y Laboratorios</p>
+              </div>
+              
+              <form class="user" (submit)="onSubmit($event)">
+                <div class="form-group">
+                  <label for="roleSelector" class="text-gray-700 font-weight-bold small">Seleccione un Rol de Prueba:</label>
+                  <select class="form-control" id="roleSelector" 
+                          [(ngModel)]="selectedRoleValue" 
+                          name="selectedRole" 
+                          (change)="onRoleChange($event)"
+                          style="border-radius: 10rem; height: 50px; font-size: 0.9rem; padding: 10px 20px;">
+                    <option *ngFor="let role of roles" [value]="role.value">
+                      {{ role.value === 'docente' ? 'Docente' : role.value === 'jefe-soporte' ? 'Jefe de Soporte' : 'Técnico / Bolsista (Juan Pérez)' }}
+                    </option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="emailInput" class="text-gray-700 font-weight-bold small">Correo Electrónico:</label>
+                  <input type="email" class="form-control form-control-user" id="emailInput" name="email" [value]="emailInput" readonly>
+                </div>
+                
+                <div class="form-group">
+                  <label for="passwordInput" class="text-gray-700 font-weight-bold small">Contraseña:</label>
+                  <input type="password" class="form-control form-control-user" id="passwordInput" name="password" [(ngModel)]="passwordInput" placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-user btn-block font-weight-bold" style="font-size: 1rem; padding: 10px;">
+                  <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
+                </button>
+              </form>
+              
+              <hr>
+              <div class="text-center small text-muted">
+                MVP 1 - Control de soporte técnico
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

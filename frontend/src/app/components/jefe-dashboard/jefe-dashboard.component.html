@@ -1,0 +1,193 @@
+<div id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" [class.toggled]="isSidebarToggled">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/jefe">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-tools"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">SIGSLAB <sup>Soporte</sup></div>
+      </a>
+
+      <hr class="sidebar-divider my-0">
+
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/jefe">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Panel de Control</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle" (click)="toggleSidebar()"></button>
+      </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" (click)="toggleSidebar()">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Panel de Control</h5>
+
+          <ul class="navbar-nav ml-auto">
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <li class="nav-item dropdown no-arrow" [class.show]="isUserDropdownOpen">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" (click)="toggleUserDropdown(); $event.preventDefault()">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="userNameDisplay">{{ user?.name }}</span>
+                <img class="img-profile rounded-circle" src="assets/img/undraw_profile.svg">
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isUserDropdownOpen" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Alert Placeholder -->
+          <div *ngIf="alertMessage" class="alert alert-dismissible fade show" [ngClass]="'alert-' + alertType" role="alert">
+            <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span [innerHTML]="alertMessage"></span>
+          </div>
+
+          <!-- Main Grid Table -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-ticket-alt mr-2"></i>Matriz de Tickets</h6>
+              <button class="btn btn-sm btn-light border" (click)="loadDashboard()">
+                <i class="fas fa-sync-alt text-primary"></i> Recargar
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="jefeTicketsTable" width="100%" cellspacing="0" style="font-size: 0.9rem;">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Laboratorio</th>
+                      <th>Equipo</th>
+                      <th>Descripción</th>
+                      <th>Creado Por</th>
+                      <th>Fecha Reporte</th>
+                      <th>Estado</th>
+                      <th>Asignado A</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let t of tickets">
+                      <td><strong>{{ t.id }}</strong></td>
+                      <td>
+                        <span *ngIf="t.type === 'Incidente'" class="badge badge-pill badge-danger-soft text-danger font-weight-bold">
+                          <i class="fas fa-bug mr-1"></i>Incidente
+                        </span>
+                        <span *ngIf="t.type === 'Software'" class="badge badge-pill badge-success-soft text-success font-weight-bold">
+                          <i class="fas fa-code mr-1"></i>Software
+                        </span>
+                      </td>
+                      <td>{{ t.lab }}</td>
+                      <td><code>{{ t.pc }}</code></td>
+                      <td [title]="t.description">
+                        {{ t.description.length > 50 ? (t.description | slice:0:50) + '...' : t.description }}
+                      </td>
+                      <td>{{ t.creator }}</td>
+                      <td>{{ t.createdDate }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'badge-ticket-pendiente': t.status === 'Pendiente',
+                          'badge-ticket-asignado': t.status === 'Asignado',
+                          'badge-ticket-finalizado': t.status === 'Finalizado'
+                        }">{{ t.status }}</span>
+                      </td>
+                      <td>{{ t.assignedTo || 'No asignado' }}</td>
+                      <td>
+                        <button *ngIf="t.status === 'Pendiente'" 
+                                class="btn btn-sm btn-primary btn-block font-weight-bold" 
+                                (click)="openAssignModal(t.id)">
+                          <i class="fas fa-user-plus mr-1"></i> Asignar
+                        </button>
+                        <button *ngIf="t.status === 'Asignado'" class="btn btn-sm btn-light btn-block text-muted" disabled>
+                          Asignado
+                        </button>
+                        <button *ngIf="t.status === 'Finalizado'" class="btn btn-sm btn-light btn-block text-muted" disabled>
+                          Sin acción
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>SIGSLAB MVP 1 &copy; 2026</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+  </div>
+
+  <!-- Assign Modal -->
+  <div class="modal fade show" style="display: block;" role="dialog" *ngIf="isAssignModalOpen">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content border-left-primary shadow">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold text-primary" id="assignModalLabel">
+            <i class="fas fa-user-plus mr-2"></i>Asignar Ticket de Soporte
+          </h5>
+          <button class="close" type="button" (click)="closeAssignModal()" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <form (submit)="confirmAssignment($event)">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="font-weight-bold text-gray-700">ID del Ticket:</label>
+              <input type="text" class="form-control" [value]="selectedTicketId" readonly>
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bold text-gray-700">Seleccionar Técnico / Bolsista:</label>
+              <select class="form-control" name="selectedTecnico" [(ngModel)]="selectedTecnico" required>
+                <option *ngFor="let tec of tecnicos" [value]="tec">{{ tec }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" (click)="closeAssignModal()">Cancelar</button>
+            <button class="btn btn-primary font-weight-bold" type="submit">Confirmar Asignación</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isAssignModalOpen"></div>
+</div>

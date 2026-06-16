@@ -1,0 +1,163 @@
+<div id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" [class.toggled]="isSidebarToggled">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/docente">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-tools"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">SIGSLAB <sup>Docente</sup></div>
+      </a>
+
+      <hr class="sidebar-divider my-0">
+
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/docente">
+          <i class="fas fa-fw fa-home"></i>
+          <span>Centro de Solicitudes</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">Gestión</div>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/docente/historial">
+          <i class="fas fa-fw fa-history"></i>
+          <span>Historial de Solicitudes</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle" (click)="toggleSidebar()"></button>
+      </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" (click)="toggleSidebar()">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Centro de Solicitudes</h5>
+
+          <ul class="navbar-nav ml-auto">
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <li class="nav-item dropdown no-arrow" [class.show]="isUserDropdownOpen">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" (click)="toggleUserDropdown(); $event.preventDefault()">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="userNameDisplay">{{ user?.name }}</span>
+                <img class="img-profile rounded-circle" src="assets/img/undraw_profile.svg">
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isUserDropdownOpen" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Alert Placeholder -->
+          <div *ngIf="alertMessage" class="alert alert-dismissible fade show" [ngClass]="'alert-' + alertType" role="alert">
+            <strong>{{ alertType === 'success' ? '¡Hecho!' : '¡Error!' }}</strong> {{ alertMessage }}
+            <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <!-- Content Row: Forms side by side -->
+          <div class="row">
+            <!-- Registrar Incidente Card (RF01) -->
+            <div class="col-lg-6" id="section-incidente">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex align-items-center">
+                  <i class="fas fa-exclamation-triangle text-danger mr-2" style="font-size: 1.25rem;"></i>
+                  <h6 class="m-0 font-weight-bold text-primary">Registro de Incidentes (RF01)</h6>
+                </div>
+                <div class="card-body">
+                  <form (submit)="onSubmitIncident()">
+                    <div class="form-group">
+                      <label class="form-label">Lugar de la Incidencia:</label>
+                      <input type="text" class="form-control" name="incLab" [(ngModel)]="incLab" placeholder="Ej: Laboratorio 101, Biblioteca, Aula 204..." required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Equipo Afectado:</label>
+                      <input type="text" class="form-control" name="incPc" [(ngModel)]="incPc" placeholder="Ej: PC-05, Impresora-01 o 'Ninguno'" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Descripción del problema:</label>
+                      <textarea class="form-control" name="incDesc" [(ngModel)]="incDesc" rows="4" placeholder="Describa a detalle la falla técnica encontrada..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-icon-split font-weight-bold">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-bug"></i>
+                      </span>
+                      <span class="text">Reportar Incidente</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+ 
+            <!-- Solicitud de Software Card (RF12) -->
+            <div class="col-lg-6" id="section-software">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex align-items-center">
+                  <i class="fas fa-download text-success mr-2" style="font-size: 1.25rem;"></i>
+                  <h6 class="m-0 font-weight-bold text-primary">Solicitud de Instalación de Software (RF12)</h6>
+                </div>
+                <div class="card-body">
+                  <form (submit)="onSubmitSoftware()">
+                    <div class="form-group">
+                      <label class="form-label">Lugar de Destino (Instalación):</label>
+                      <input type="text" class="form-control" name="softLab" [(ngModel)]="softLab" placeholder="Ej: Laboratorio 201, Cómputo B..." required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Nombre del Software y Versión:</label>
+                      <input type="text" class="form-control" name="softName" [(ngModel)]="softName" placeholder="Ej: AutoCAD 2025, VS Code, Python 3.12" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Observaciones adicionales:</label>
+                      <textarea class="form-control" name="softObs" [(ngModel)]="softObs" rows="4" placeholder="Detalle si requiere librerías especiales, plugin de licencias, etc."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-icon-split font-weight-bold">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-plus"></i>
+                      </span>
+                      <span class="text">Enviar Solicitud</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>SIGSLAB MVP 1 &copy; 2026</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+  </div>
+</div>

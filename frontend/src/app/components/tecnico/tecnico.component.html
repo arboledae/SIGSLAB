@@ -1,0 +1,276 @@
+<div id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" [class.toggled]="isSidebarToggled">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/tecnico">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-tools"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">SIGSLAB <sup>Técnico</sup></div>
+      </a>
+
+      <hr class="sidebar-divider my-0">
+
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/tecnico">
+          <i class="fas fa-fw fa-clipboard-list"></i>
+          <span>Mi Bandeja</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">Gestión</div>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/tecnico/historial">
+          <i class="fas fa-fw fa-history"></i>
+          <span>Historial de Tickets</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle" (click)="toggleSidebar()"></button>
+      </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" (click)="toggleSidebar()">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Mi Bandeja</h5>
+
+          <ul class="navbar-nav ml-auto">
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <li class="nav-item dropdown no-arrow" [class.show]="isUserDropdownOpen">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" (click)="toggleUserDropdown(); $event.preventDefault()">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="userNameDisplay">{{ user?.name }}</span>
+                <img class="img-profile rounded-circle" src="assets/img/undraw_profile.svg">
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isUserDropdownOpen" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <button class="btn btn-sm btn-light border shadow-sm font-weight-bold ml-auto" (click)="loadInbox()">
+              <i class="fas fa-sync-alt text-success mr-1"></i> Sincronizar
+            </button>
+          </div>
+
+          <!-- Alert placeholder -->
+          <div *ngIf="alertMessage" class="alert alert-dismissible fade show" [ngClass]="'alert-' + alertType" role="alert">
+            <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span [innerHTML]="alertMessage"></span>
+          </div>
+
+          <!-- Tablero de Tickets Pendientes -->
+          <div class="card shadow mb-4" *ngIf="activeTickets.length > 0; else emptyInbox">
+            <div class="card-header py-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+              <h6 class="m-0 font-weight-bold text-warning">
+                <i class="fas fa-clock mr-2"></i>Tickets Asignados Pendientes ({{ activeTickets.length }} / 12)
+              </h6>
+              <small class="text-muted font-weight-bold">
+                <i class="fas fa-info-circle mr-1"></i>Capacidad Máxima: 12 tickets activos
+              </small>
+            </div>
+            <div class="card-body" style="background-color: #f8f9fc;">
+              <div class="row" id="ticketsGrid">
+                <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch" *ngFor="let t of activeTickets">
+                  <div class="card ticket-card shadow-sm w-100 border-left-brand">
+                    <div class="card-body p-3 d-flex flex-column justify-content-between">
+                      <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                          <span class="small font-weight-bold text-gray-500">{{ t.id }}</span>
+                          <span *ngIf="t.type === 'Incidente'" class="badge badge-pill badge-danger-soft text-danger font-weight-bold">
+                            <i class="fas fa-bug mr-1"></i>Incidente
+                          </span>
+                          <span *ngIf="t.type === 'Software'" class="badge badge-pill badge-success-soft text-success font-weight-bold">
+                            <i class="fas fa-code mr-1"></i>Software
+                          </span>
+                        </div>
+                        <h6 class="font-weight-bold text-gray-800 mb-1">{{ t.lab }}</h6>
+                        <p class="small text-muted mb-2">Equipo: <code>{{ t.pc }}</code></p>
+                        <p class="small text-gray-700 mb-2" 
+                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.5rem;" 
+                           [title]="t.description">
+                          {{ t.description }}
+                        </p>
+                        <div class="small text-gray-500 mb-2">
+                          <i class="far fa-clock mr-1"></i>Reportado: {{ t.createdDate }}
+                        </div>
+                      </div>
+                      
+                      <!-- Actions -->
+                      <div class="row no-gutters mt-auto pt-3">
+                        <div class="col-6 pr-1">
+                          <button class="btn btn-sm btn-info btn-block font-weight-bold" (click)="showTicketDetail(t)">
+                            <i class="fas fa-info-circle mr-1"></i> Ver Info
+                          </button>
+                        </div>
+                        <div class="col-6 pl-1">
+                          <button class="btn btn-sm btn-success btn-block font-weight-bold" (click)="openCloseModal(t.id)">
+                            <i class="fas fa-check mr-1"></i> Cerrar Ticket
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Inbox -->
+          <ng-template #emptyInbox>
+            <div id="emptyInboxMsg" class="text-center py-5 text-muted">
+              <i class="fas fa-inbox fa-3x mb-3 text-gray-400"></i>
+              <h5>¡Bandeja de Trabajo Vacía!</h5>
+              <p class="m-0">No tienes ningún ticket de soporte técnico asignado activo en este momento.</p>
+            </div>
+          </ng-template>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>SIGSLAB MVP 1 &copy; 2026</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+  </div>
+
+  <!-- Detail Information Modal -->
+  <div class="modal fade show" style="display: block;" role="dialog" *ngIf="isInfoModalOpen">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content shadow-lg border-left-info">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold text-info" id="infoModalLabel">
+            <i class="fas fa-info-circle mr-2"></i>Detalle Completo del Ticket
+          </h5>
+          <button class="close" type="button" (click)="closeInfoModal()" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="selectedTicketForInfo">
+          <table class="table table-bordered">
+            <tr>
+              <th style="width: 30%;">ID del Ticket</th>
+              <td class="font-weight-bold text-primary">{{ selectedTicketForInfo.id }}</td>
+            </tr>
+            <tr>
+              <th>Tipo de Requerimiento</th>
+              <td>
+                <span class="badge" [ngClass]="selectedTicketForInfo.type === 'Incidente' ? 'badge-danger' : 'badge-success'">
+                  {{ selectedTicketForInfo.type === 'Incidente' ? 'Incidente' : 'Instalación de Software' }}
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>Laboratorio</th>
+              <td>{{ selectedTicketForInfo.lab }}</td>
+            </tr>
+            <tr>
+              <th>Equipo Afectado</th>
+              <td class="font-weight-bold text-dark">{{ selectedTicketForInfo.pc }}</td>
+            </tr>
+            <tr>
+              <th>Descripción del Reporte</th>
+              <td style="white-space: pre-wrap;">{{ selectedTicketForInfo.description }}</td>
+            </tr>
+            <tr>
+              <th>Reportado por (Docente)</th>
+              <td>{{ selectedTicketForInfo.creator }}</td>
+            </tr>
+            <tr>
+              <th>Fecha de Registro</th>
+              <td>{{ selectedTicketForInfo.createdDate }}</td>
+            </tr>
+            <tr>
+              <th>Estado Actual</th>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-ticket-pendiente': selectedTicketForInfo.status === 'Pendiente',
+                  'badge-ticket-asignado': selectedTicketForInfo.status === 'Asignado',
+                  'badge-ticket-finalizado': selectedTicketForInfo.status === 'Finalizado'
+                }">{{ selectedTicketForInfo.status }}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" (click)="closeInfoModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Info Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isInfoModalOpen"></div>
+
+  <!-- Close Ticket Modal (RF03 / Finalizar Proceso) -->
+  <div class="modal fade show" style="display: block;" role="dialog" *ngIf="isCloseModalOpen">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content border-left-success shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold text-success" id="closeTicketModalLabel">
+            <i class="fas fa-check-double mr-2"></i>Registrar Cierre de Ticket
+          </h5>
+          <button class="close" type="button" (click)="closeCloseModal()" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <form (submit)="confirmClosure($event)">
+          <div class="modal-body">
+            <div class="alert alert-info py-2" style="font-size: 0.85rem;">
+              <i class="fas fa-info-circle mr-1"></i> Detalle a continuación las acciones correctivas y de mantenimiento realizadas para dar solución definitiva a este ticket.
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bold text-gray-700">ID del Ticket:</label>
+              <input type="text" class="form-control font-weight-bold" [value]="ticketIdToClose" readonly>
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bold text-gray-700">Acción Correctiva Realizada:</label>
+              <textarea class="form-control" name="correctiveAction" [(ngModel)]="correctiveAction" 
+                        rows="10" placeholder="Escriba aquí la bitácora del mantenimiento, instalación o reparación..." 
+                        style="font-family: monospace; font-size: 0.9rem;" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" (click)="closeCloseModal()">Cancelar</button>
+            <button class="btn btn-success font-weight-bold" type="submit">
+              <i class="fas fa-check-circle mr-1"></i> Guardar y Finalizar Atención
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Close Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isCloseModalOpen"></div>
+</div>

@@ -1,14 +1,8 @@
-# SIGSLAB - Sistema de Gestión de Soporte de Laboratorios (MVP 1)
+# SIGSLAB - Sistema de Gestión de Soporte de Laboratorios
 
-**SIGSLAB** es una plataforma web para la gestión, reporte y seguimiento de incidentes de soporte técnico dentro de los laboratorios de cómputo y electrónica de la institución. Este proyecto representa la fase **MVP 1 (Mínimo Producto Viable 1)**.
+**SIGSLAB** es una plataforma web para la gestión, reporte y seguimiento de incidentes de soporte técnico dentro de los laboratorios de cómputo y electrónica de la institución. 
 
----
-
-## 🚀 Estado del Proyecto: MVP 1
-Esta primera versión está diseñada como un prototipo funcional **Front-end Only**. 
-
-* **Persistencia:** Los datos se simulan y almacenan localmente en el navegador mediante `localStorage`.
-* **Roles Simulados:** Permite alternar y experimentar con los distintos flujos de trabajo de los roles involucrados sin necesidad de configurar una base de datos o un servidor centralizado.
+Esta versión representa el sistema completo e integrado, compuesto por un frontend modular, un servidor API (backend) y una base de datos relacional persistente, todo orquestado bajo contenedores Docker.
 
 ---
 
@@ -19,63 +13,132 @@ El sistema cuenta con tres tipos de usuarios, cada uno con una interfaz adaptada
    * Reporta nuevos incidentes (especificando laboratorio, PC afectada y descripción del problema).
    * Visualiza el historial de tickets creados y su estado actual (Pendiente, Asignado, Finalizado).
 2. **Jefe de Soporte:**
-   * Dashboard con métricas clave (total de incidentes, pendientes, asignados e ingenieros disponibles).
-   * Asigna tickets pendientes a los técnicos disponibles (con un límite máximo de 12 tickets activos por técnico).
+   * Visualiza la matriz completa de tickets en el sistema.
+   * Asigna tickets pendientes a los técnicos disponibles.
    * Monitorea el progreso general del soporte.
 3. **Técnico (Bolsistas y Personal):**
-   * Visualiza su cola de tickets asignados.
+   * Visualiza su bandeja personal de tickets asignados.
    * Modifica el estado de los incidentes y registra las **acciones correctivas** aplicadas al dar por finalizado un ticket.
+   * Visualiza su historial de tareas resueltas.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
-* **Diseño y Estructura:** HTML5, CSS3, SCSS (Sass).
-* **Framework CSS:** Bootstrap 4 (basado en la plantilla SB Admin 2).
-* **Lógica e Interactividad:** JavaScript moderno (ES6+) y jQuery.
-* **Componentes Gráficos:** Chart.js para visualización de métricas y DataTables para listas dinámicas de historial.
-* **Gestor de Tareas:** Gulp (para compilación de Sass, minificación de JS y recarga del navegador en tiempo de desarrollo).
+
+*   **Frontend:** Angular 16, Bootstrap 4 (basado en el tema SB Admin 2) y FontAwesome.
+*   **Backend:** NestJS v9 y TypeORM.
+*   **Base de Datos:** PostgreSQL 15.
+*   **Proxy Inverso y Servidor Web:** Nginx.
+*   **Orquestación:** Docker y Docker Compose.
 
 ---
 
-## 📦 Instalación y Uso Local
+## 📂 Estructura del Proyecto
 
-### Prerrequisitos
-* Tener instalado **Node.js** (versión recomendada LTS) y **npm**.
+El proyecto está diseñado bajo una estructura limpia de monorrepositorio:
+*   `/frontend`: Código cliente de Angular y su Dockerfile.
+*   `/backend`: Código servidor de NestJS, su Dockerfile y conexión a base de datos.
+*   `docker-compose.yml`: Archivo de orquestación de servicios en la raíz.
+*   `.env.template`: Plantilla de variables de entorno para configuración local.
 
-### Instrucciones de Ejecución
-1. Clona este repositorio o descarga los archivos.
-2. Abre la terminal en el directorio raíz del proyecto y ejecuta:
+---
+
+## 🚀 Guía de Instalación y Uso Rápido
+
+¡Hola! Sigue estos sencillos pasos para levantar el proyecto en tu computadora. Puedes elegir usar una base de datos local en tu máquina o conectarte a la base de datos central en la nube con Supabase.
+
+### 📋 Prerrequisitos
+Antes de comenzar, asegúrate de tener instalado **Docker** y **Docker Compose** en tu sistema operativo:
+* [Instalar Docker](https://docs.docker.com/get-docker/)
+* [Instalar Docker Compose](https://docs.docker.com/compose/install/)
+
+---
+
+### ⚙️ Paso 1: Clonar el Repositorio y Configurar Variables de Entorno
+
+1. **Clona este repositorio** en tu computadora.
+2. Abre una terminal en la carpeta raíz del proyecto y duplica la plantilla de configuración:
    ```bash
-   npm install
+   cp .env.template .env
    ```
-3. Para iniciar el servidor de desarrollo local con recarga automática:
-   ```bash
-   npm start
-   ```
-   *Esto iniciará un servidor web local (BrowserSync) que abrirá el proyecto en tu navegador predeterminado y recargará las páginas automáticamente cuando realices cambios.*
-
-4. *(Alternativa)* Si no deseas instalar Node/npm, puedes abrir directamente el archivo `login.html` en cualquier navegador moderno para probar la interfaz, aunque se recomienda usar el entorno de desarrollo con Gulp.
+   > [!IMPORTANT]
+   > El archivo `.env` contendrá las contraseñas de conexión y está configurado en `.gitignore` para que **NUNCA** se suba a GitHub. Esto protege tus credenciales de accesos públicos.
 
 ---
 
-## 🛠️ Credenciales de Prueba (Simuladas)
-Para probar el MVP 1, puedes ingresar al sistema desde la pantalla de login utilizando los siguientes perfiles de prueba:
+### 🗄️ Paso 2: Elegir tu Base de Datos (Local o en la Nube)
 
-* **Docente:**
-  * **Email:** `docente@sigslab.edu`
-  * **Contraseña:** `123456`
-* **Jefe de Soporte:**
-  * **Email:** `jefe@sigslab.edu`
-  * **Contraseña:** `123456`
-* **Técnico:**
-  * **Email:** `tecnico@sigslab.edu`
-  * **Contraseña:** `123456`
+Tienes **dos opciones** para hacer funcionar la base de datos:
+
+#### 🔹 Opción A: Base de Datos Local (La más rápida para pruebas individuales)
+No necesitas configurar nada adicional. Docker creará una base de datos PostgreSQL automáticamente en tu computadora.
+1. Abre tu archivo `.env` y asegúrate de que esté configurado así:
+   ```env
+   POSTGRES_USER=sigslab
+   POSTGRES_PASSWORD=sigslab_pass
+   POSTGRES_DB=sigslab
+
+   DB_HOST=db
+   DB_PORT=5432
+   DB_USER=sigslab
+   DB_PASSWORD=sigslab_pass
+   DB_NAME=sigslab
+   DB_SSL=false
+   ```
+
+#### ☁️ Opción B: Base de Datos en la Nube con Supabase (Recomendada para compartir la misma información)
+Si quieres que todas compartan la misma información en tiempo real, sigan estos pasos:
+
+1. **Crear base de datos en Supabase:**
+   * Regístrate en [Supabase](https://supabase.com/) y crea un proyecto nuevo.
+   * Ve a la sección **SQL Editor** (en el menú lateral izquierdo).
+   * Haz clic en **New Query** (Nueva consulta).
+   * Abre el archivo [supabase_init.sql](file:///home/sofia-arboleda/Escritorio/plantilla./sigslab/supabase_init.sql) de este proyecto, copia todo su contenido, pégalo en el editor SQL de Supabase y presiona el botón **Run** (Ejecutar). Esto creará las tablas y los usuarios de prueba en la nube.
+
+2. **Configurar el archivo `.env`:**
+   * Abre tu archivo `.env` y configura el SSL en `true`:
+     ```env
+     DB_SSL=true
+     ```
+   * Consigue tu cadena de conexión (URI) en Supabase: Ve a **Project Settings** -> **Database** -> busca la sección **Connection string**, selecciona la opción **URI** y cópiala.
+   * Pégala en la variable `DATABASE_URL` de tu `.env`. Debe verse parecida a esto:
+     ```env
+     DATABASE_URL=postgresql://postgres:tu_contraseña_real@db.efmjyxqqpgkbpzbvyypa.supabase.co:5432/postgres
+     ```
+     > [!WARNING]
+     > **¡Cuidado con los corchetes!** Asegúrate de remover los corchetes `[` y `]` que Supabase coloca por defecto alrededor de `[YOUR-PASSWORD]`. 
+     > * **Incorrecto:** `postgres:[mi_clave]@db...`
+     > * **Correcto:** `postgres:mi_clave@db...`
 
 ---
 
-## 🔮 Próximos Pasos (Hacia Producción)
-Para evolucionar este MVP 1 hacia un sistema en producción real se requiere:
-1. **Desarrollar un Back-end:** Crear una API REST (utilizando Node.js/Express, Python/FastAPI, PHP u otra tecnología) para centralizar la lógica.
-2. **Base de Datos:** Diseñar y conectar una base de datos relacional (como PostgreSQL o MySQL) o no relacional (como MongoDB) para almacenar los tickets de forma compartida.
-3. **Autenticación Real:** Implementar autenticación segura basada en tokens (JWT) o sesiones cifradas en el servidor.
-4. **Notificaciones:** Integrar envío de correos electrónicos automáticos (SMTP) ante cambios de estado de los incidentes.
+### 🐳 Paso 3: Levantar la Aplicación con Docker
+
+Dependiendo de la opción que elegiste en el paso anterior, ejecuta el comando correspondiente en tu terminal:
+
+* **Si elegiste la Opción A (Local):**
+  ```bash
+  sudo docker compose up --build
+  ```
+* **Si elegiste la Opción B (Supabase en la nube):**
+  *(Puedes omitir la base de datos local para no consumir recursos innecesarios)*
+  ```bash
+  sudo docker compose up --build backend frontend
+  ```
+
+---
+
+### 💻 Paso 4: Acceder y Probar el Sistema
+
+Una vez que Docker termine de levantar los contenedores, abre tu navegador web favorito e ingresa a:
+👉 **[http://localhost/](http://localhost/)**
+
+Usa los siguientes usuarios de prueba ya registrados para ver cómo interactúa cada rol:
+
+| Rol | Correo Electrónico | Contraseña | ¿Qué puede hacer? |
+| :--- | :--- | :--- | :--- |
+| **Docente** | `docente@sigslab.edu` | *(Cualquiera, ej. `123456`)* | Reportar incidentes de laboratorios/PCs y ver su historial. |
+| **Jefe de Soporte** | `jefe@sigslab.edu` | *(Cualquiera, ej. `123456`)* | Ver todos los reportes y asignarlos a los técnicos. |
+| **Técnico** | `tecnico@sigslab.edu` | *(Cualquiera, ej. `123456`)* | Ver su bandeja de asignados y cerrarlos detallando las acciones correctivas. |
+
+*También cuentas con cuentas técnicas adicionales:* `maria@sigslab.edu` y `carlos@sigslab.edu`.
