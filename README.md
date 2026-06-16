@@ -56,7 +56,7 @@ Sigue estos pasos para levantar la aplicación en tu computadora de forma local:
 
 ### ⚙️ Paso 2: Clonar y Configurar Claves en Angular
 1. Clona este repositorio en tu computadora.
-2. Abre el archivo [src/environments/environment.ts](file:///src/environments/environment.ts).
+2. Duplica el archivo [src/environments/environment.template.ts](file:///home/sofia-arboleda/Escritorio/plantilla./sigslab/src/environments/environment.template.ts) y renómbralo como `src/environments/environment.ts` (este último está ignorado en Git para proteger tus credenciales).
 3. Reemplaza los valores de `supabaseUrl` y `supabaseKey` con las claves públicas de tu proyecto de Supabase (las puedes encontrar en **Project Settings -> API** en tu dashboard de Supabase).
 
 ### ⚙️ Paso 3: Ejecutar Localmente
@@ -100,14 +100,14 @@ Al ser una arquitectura **serverless** (sin servidores propios que mantener), pu
 Crea las siguientes cuentas en la sección **Authentication -> Users** de tu panel de Supabase. Al momento de crearlas, ingresa el rol y nombre correspondientes en los metadatos del usuario (`User Metadata`) para que se sincronicen correctamente:
 
 1. **Docente:**
-   * **Email:** `docente@sigslab.edu`
+   * **Email:** `sofi@cuy.com`
    * **Contraseña:** `123456`
    * **User Metadata:** `{ "name": "Prof. Sofia Arboleda", "role": "docente" }`
 2. **Jefe de Soporte:**
-   * **Email:** `jefe@sigslab.edu`
+   * **Email:** `diana@kirby.com`
    * **Contraseña:** `123456`
-   * **User Metadata:** `{ "name": "Ing. Marcos Paz", "role": "jefe-soporte" }`
+   * **User Metadata:** `{ "name": "Ing. Diana Kirby", "role": "jefe-soporte" }`
 3. **Técnico:**
-   * **Email:** `tecnico@sigslab.edu`
+   * **Email:** `mamu@kath.com`
    * **Contraseña:** `123456`
-   * **User Metadata:** `{ "name": "Juan Pérez (Bolsista)", "role": "tecnico" }`
+   * **User Metadata:** `{ "name": "Mamu Kath (Técnico)", "role": "tecnico" }`

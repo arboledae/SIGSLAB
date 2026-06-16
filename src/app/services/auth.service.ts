@@ -9,7 +9,7 @@ import { SupabaseService } from './supabase.service';
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private supabase: SupabaseService, private router: Router) {}
+  constructor(private supabase: SupabaseService, private router: Router) { }
 
   getCurrentUser(): User | null {
     const userJson = localStorage.getItem('currentUser');
@@ -25,12 +25,11 @@ export class AuthService {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  login(email: string): Observable<User> {
-    // Inicia sesión usando Supabase Auth con la contraseña por defecto '123456' para el MVP
+  login(email: string, password: string): Observable<User> {
     return from(
       this.supabase.client.auth.signInWithPassword({
         email: email.trim().toLowerCase(),
-        password: '123456'
+        password: password
       })
     ).pipe(
       switchMap(({ data, error }) => {

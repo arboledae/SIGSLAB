@@ -43,3 +43,6 @@ Thumbs.db
 .env
 .env.*
 !.env.template
+
+# Angular environments
+src/environments/environment.ts

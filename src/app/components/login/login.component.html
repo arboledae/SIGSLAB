@@ -10,38 +10,34 @@
                   <i class="fas fa-tools"></i>
                 </div>
                 <h1 class="h3 text-gray-900 font-weight-bold">SIGSLAB</h1>
-                <p class="text-muted">Sistema Integral de Gestión de Soporte y Laboratorios</p>
+                <p class="text-dark" style="color: black !important;">Sistema Integral de Gestión de Soporte y Laboratorios</p>
               </div>
-              
+
               <form class="user" (submit)="onSubmit($event)">
                 <div class="form-group">
-                  <label for="roleSelector" class="text-gray-700 font-weight-bold small">Seleccione un Rol de Prueba:</label>
-                  <select class="form-control" id="roleSelector" 
-                          [(ngModel)]="selectedRoleValue" 
-                          name="selectedRole" 
-                          (change)="onRoleChange($event)"
-                          style="border-radius: 10rem; height: 50px; font-size: 0.9rem; padding: 10px 20px;">
-                    <option *ngFor="let role of roles" [value]="role.value">
-                      {{ role.value === 'docente' ? 'Docente' : role.value === 'jefe-soporte' ? 'Jefe de Soporte' : 'Técnico / Bolsista (Juan Pérez)' }}
-                    </option>
-                  </select>
+                  <label for="emailInput" class="text-dark font-weight-bold small" style="color: black !important;">Correo Electrónico:</label>
+                  <input type="email" class="form-control form-control-user" id="emailInput" name="email"
+                    [(ngModel)]="emailInput" style="color: #333333 !important; font-weight: 500;" required>
                 </div>
-                
+
                 <div class="form-group">
-                  <label for="emailInput" class="text-gray-700 font-weight-bold small">Correo Electrónico:</label>
-                  <input type="email" class="form-control form-control-user" id="emailInput" name="email" [value]="emailInput" readonly>
+                  <label for="passwordInput" class="text-dark font-weight-bold small" style="color: black !important;">Contraseña:</label>
+                  <div class="position-relative">
+                    <input [type]="showPassword ? 'text' : 'password'" class="form-control form-control-user" id="passwordInput" name="password"
+                      [(ngModel)]="passwordInput" style="padding-right: 50px; color: #333333 !important; font-weight: 500;" required>
+                    <button type="button" (click)="togglePasswordVisibility()" class="btn position-absolute"
+                      style="right: 15px; top: 50%; transform: translateY(-50%); border: none; background: transparent; z-index: 10; color: #5a5c69; padding: 0;">
+                      <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
+                  </div>
                 </div>
-                
-                <div class="form-group">
-                  <label for="passwordInput" class="text-gray-700 font-weight-bold small">Contraseña:</label>
-                  <input type="password" class="form-control form-control-user" id="passwordInput" name="password" [(ngModel)]="passwordInput" placeholder="••••••••">
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-user btn-block font-weight-bold" style="font-size: 1rem; padding: 10px;">
+
+                <button type="submit" class="btn btn-primary btn-user btn-block font-weight-bold"
+                  style="font-size: 1rem; padding: 10px;">
                   <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
                 </button>
               </form>
-              
+
               <hr>
               <div class="text-center small text-muted">
                 MVP 1 - Control de soporte técnico
