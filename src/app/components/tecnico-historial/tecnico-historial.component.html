@@ -48,7 +48,56 @@
 
           <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Historial de Tickets Atendidos</h5>
 
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ml-auto align-items-center">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1" [class.show]="isNotificationDropdownOpen">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                (click)="toggleNotificationDropdown(); $event.preventDefault()">
+                <i class="fas fa-bell fa-fw" style="color: var(--primary-color); font-size: 1.15rem;"></i>
+                <!-- Counter - Alerts (soft badge) -->
+                <span class="badge badge-danger badge-counter" style="background-color: var(--primary-color);" *ngIf="unreadNotificationsCount > 0">
+                  {{ unreadNotificationsCount }}
+                </span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isNotificationDropdownOpen"
+                aria-labelledby="alertsDropdown" style="width: 300px; position: absolute; right: 0; z-index: 1050;">
+                <h6 class="dropdown-header text-white font-weight-bold" style="background-color: var(--primary-color); border-color: var(--primary-color);">
+                  Centro de Notificaciones
+                </h6>
+                <div style="max-height: 300px; overflow-y: auto;">
+                  <div *ngIf="notifications.length === 0" class="dropdown-item text-center text-muted py-3">
+                    No tienes notificaciones.
+                  </div>
+                  <a *ngFor="let n of notifications" 
+                     class="dropdown-item d-flex align-items-center" 
+                     href="#" 
+                     (click)="isNotificationDropdownOpen = false; $event.preventDefault()"
+                     [style.background-color]="!n.read ? 'rgba(0,0,0,0.03)' : 'transparent'">
+                    <div class="mr-3">
+                      <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%;">
+                        <i [ngClass]="{
+                          'fas fa-comments': n.type === 'message',
+                          'fas fa-file-alt': n.type === 'ticket',
+                          'fas fa-info-circle': n.type === 'system'
+                        }"></i>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="small text-gray-500">{{ n.timestamp }}</div>
+                      <span [class.font-weight-bold]="!n.read" class="text-gray-800" style="display: block; font-size: 0.85rem; line-height: 1.2;">
+                        {{ n.title }}
+                      </span>
+                      <small class="text-gray-600" style="font-size: 0.75rem;">{{ n.body }}</small>
+                    </div>
+                  </a>
+                </div>
+                <a class="dropdown-item text-center small text-gray-500 py-2 bg-light border-top" href="#" (click)="clearNotifications(); isNotificationDropdownOpen = false; $event.preventDefault()">
+                  Marcar todas como leídas
+                </a>
+              </div>
+            </li>
+
             <div class="topbar-divider d-none d-sm-block"></div>
 
             <li class="nav-item dropdown no-arrow" [class.show]="isUserDropdownOpen">
@@ -100,8 +149,11 @@
                         <span *ngIf="t.type === 'Incidente'" class="badge badge-pill badge-danger-soft text-danger font-weight-bold">
                           <i class="fas fa-bug mr-1"></i>Incidente
                         </span>
-                        <span *ngIf="t.type === 'Software'" class="badge badge-pill badge-success-soft text-success font-weight-bold">
-                          <i class="fas fa-code mr-1"></i>Software
+                        <span *ngIf="t.type === 'Solicitud de instalación'" class="badge badge-pill badge-success-soft text-success font-weight-bold">
+                          <i class="fas fa-code mr-1"></i>Instalación Software
+                        </span>
+                        <span *ngIf="t.type === 'Solicitud de apertura'" class="badge badge-pill badge-info-soft text-info font-weight-bold" style="background-color: #eaf1f5; color: #17a2b8;">
+                          <i class="fas fa-door-open mr-1"></i>Apertura Lab
                         </span>
                       </td>
                       <td>{{ t.lab }}</td>
@@ -110,10 +162,11 @@
                       <td>{{ t.creator }}</td>
                       <td>{{ t.createdDate }}</td>
                       <td>
-                        <span class="badge" [ngClass]="{
-                          'badge-ticket-pendiente': t.status === 'Pendiente',
-                          'badge-ticket-asignado': t.status === 'Asignado',
-                          'badge-ticket-finalizado': t.status === 'Finalizado'
+                        <span class="badge text-white" [ngClass]="{
+                          'badge-danger': t.status === 'Pendiente',
+                          'badge-warning': t.status === 'Asignado',
+                          'badge-primary': t.status === 'En proceso',
+                          'badge-success': t.status === 'Finalizado'
                         }">{{ t.status }}</span>
                       </td>
                       <td>

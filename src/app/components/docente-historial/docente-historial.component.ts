@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { TicketService } from '../../services/ticket.service';
+import { TicketService, AppNotification } from '../../services/ticket.service';
 import { Ticket } from '../../models/ticket.model';
 import { User } from '../../models/user.model';
 
@@ -15,6 +15,8 @@ export class DocenteHistorialComponent implements OnInit {
 
   isSidebarToggled = false;
   isUserDropdownOpen = false;
+  isNotificationDropdownOpen = false;
+  notifications: AppNotification[] = [];
 
   constructor(
     private authService: AuthService,
@@ -30,6 +32,7 @@ export class DocenteHistorialComponent implements OnInit {
 
   loadHistory(): void {
     if (!this.user) return;
+    this.loadNotifications();
     this.ticketService.getTicketsByCreator(this.user.email).subscribe({
       next: (tickets) => {
         // Reverse to show latest first
@@ -41,12 +44,41 @@ export class DocenteHistorialComponent implements OnInit {
     });
   }
 
+  loadNotifications(): void {
+    if (!this.user) return;
+    this.ticketService.getNotifications(this.user.email).subscribe({
+      next: (notifs) => {
+        this.notifications = notifs;
+      }
+    });
+  }
+
+  clearNotifications(): void {
+    if (!this.user) return;
+    this.ticketService.markNotificationsAsRead(this.user.email).subscribe({
+      next: () => {
+        this.loadNotifications();
+      }
+    });
+  }
+
   toggleSidebar(): void {
     this.isSidebarToggled = !this.isSidebarToggled;
   }
 
   toggleUserDropdown(): void {
     this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+
+  toggleNotificationDropdown(): void {
+    this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+    if (this.isNotificationDropdownOpen) {
+      this.clearNotifications();
+    }
+  }
+
+  get unreadNotificationsCount(): number {
+    return this.notifications.filter(n => !n.read).length;
   }
 
   logout(): void {

@@ -2,7 +2,7 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" [class.toggled]="isSidebarToggled">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/docente">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#" (click)="switchTab('inicio'); $event.preventDefault()">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-tools"></i>
         </div>
@@ -11,20 +11,68 @@
 
       <hr class="sidebar-divider my-0">
 
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/docente">
+      <li class="nav-item" [class.active]="activeTab === 'inicio'">
+        <a class="nav-link" href="#" (click)="switchTab('inicio'); $event.preventDefault()">
           <i class="fas fa-fw fa-home"></i>
-          <span>Centro de Solicitudes</span>
+          <span>Inicio</span>
         </a>
       </li>
 
       <hr class="sidebar-divider">
-      <div class="sidebar-heading">Gestión</div>
+      <div class="sidebar-heading">Incidentes</div>
 
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/docente/historial">
-          <i class="fas fa-fw fa-history"></i>
-          <span>Historial de Solicitudes</span>
+      <li class="nav-item" [class.active]="activeTab === 'registrar-incidente'">
+        <a class="nav-link" href="#" (click)="switchTab('registrar-incidente'); $event.preventDefault()">
+          <i class="fas fa-fw fa-plus-circle"></i>
+          <span>Registrar Incidente</span>
+        </a>
+      </li>
+
+      <li class="nav-item" [class.active]="activeTab === 'consultar-incidentes'">
+        <a class="nav-link" href="#" (click)="switchTab('consultar-incidentes'); $event.preventDefault()">
+          <i class="fas fa-fw fa-search"></i>
+          <span>Consultar Incidentes</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">Solicitudes</div>
+
+      <li class="nav-item" [class.active]="activeTab === 'solicitar-instalacion'">
+        <a class="nav-link" href="#" (click)="switchTab('solicitar-instalacion'); $event.preventDefault()">
+          <i class="fas fa-fw fa-download"></i>
+          <span>Instalar Software</span>
+        </a>
+      </li>
+
+      <li class="nav-item" [class.active]="activeTab === 'solicitar-apertura'">
+        <a class="nav-link" href="#" (click)="switchTab('solicitar-apertura'); $event.preventDefault()">
+          <i class="fas fa-fw fa-door-open"></i>
+          <span>Apertura Laboratorio</span>
+        </a>
+      </li>
+
+      <li class="nav-item" [class.active]="activeTab === 'consultar-solicitudes'">
+        <a class="nav-link" href="#" (click)="switchTab('consultar-solicitudes'); $event.preventDefault()">
+          <i class="fas fa-fw fa-list-alt"></i>
+          <span>Consultar Solicitudes</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">Comunicación</div>
+
+      <li class="nav-item" [class.active]="activeTab === 'chats'">
+        <a class="nav-link" href="#" (click)="switchTab('chats'); $event.preventDefault()">
+          <i class="fas fa-fw fa-comments"></i>
+          <span>Chats de Soporte</span>
+        </a>
+      </li>
+
+      <li class="nav-item" [class.active]="activeTab === 'perfil'">
+        <a class="nav-link" href="#" (click)="switchTab('perfil'); $event.preventDefault()">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Mi Perfil</span>
         </a>
       </li>
 
@@ -46,9 +94,67 @@
             <i class="fa fa-bars"></i>
           </button>
 
-          <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">Centro de Solicitudes</h5>
+          <h5 class="m-0 font-weight-bold text-gray-800 d-none d-md-inline-block">
+            <span *ngIf="activeTab === 'inicio'">Inicio</span>
+            <span *ngIf="activeTab === 'registrar-incidente'">Registrar Incidente</span>
+            <span *ngIf="activeTab === 'consultar-incidentes'">Consultar Incidentes</span>
+            <span *ngIf="activeTab === 'solicitar-instalacion'">Solicitar Instalación de Software</span>
+            <span *ngIf="activeTab === 'solicitar-apertura'">Solicitar Apertura de Laboratorio</span>
+            <span *ngIf="activeTab === 'consultar-solicitudes'">Consultar Solicitudes</span>
+            <span *ngIf="activeTab === 'chats'">Chats y Conversaciones</span>
+            <span *ngIf="activeTab === 'perfil'">Mi Perfil de Docente</span>
+          </h5>
 
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ml-auto align-items-center">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1" [class.show]="isNotificationDropdownOpen">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                (click)="toggleNotificationDropdown(); $event.preventDefault()">
+                <i class="fas fa-bell fa-fw" style="color: var(--primary-color); font-size: 1.15rem;"></i>
+                <!-- Counter - Alerts (soft badge) -->
+                <span class="badge badge-danger badge-counter" style="background-color: var(--primary-color);" *ngIf="unreadNotificationsCount > 0">
+                  {{ unreadNotificationsCount }}
+                </span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isNotificationDropdownOpen"
+                aria-labelledby="alertsDropdown" style="width: 300px; position: absolute; right: 0; z-index: 1050;">
+                <h6 class="dropdown-header text-white font-weight-bold" style="background-color: var(--primary-color); border-color: var(--primary-color);">
+                  Centro de Notificaciones
+                </h6>
+                <div style="max-height: 300px; overflow-y: auto;">
+                  <div *ngIf="notifications.length === 0" class="dropdown-item text-center text-muted py-3">
+                    No tienes notificaciones.
+                  </div>
+                  <a *ngFor="let n of notifications" 
+                     class="dropdown-item d-flex align-items-center" 
+                     href="#" 
+                     (click)="n.type === 'message' ? switchTab('chats') : null; isNotificationDropdownOpen = false; $event.preventDefault()"
+                     [style.background-color]="!n.read ? 'rgba(0,0,0,0.03)' : 'transparent'">
+                    <div class="mr-3">
+                      <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%;">
+                        <i [ngClass]="{
+                          'fas fa-comments': n.type === 'message',
+                          'fas fa-file-alt': n.type === 'ticket',
+                          'fas fa-info-circle': n.type === 'system'
+                        }"></i>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="small text-gray-500">{{ n.timestamp }}</div>
+                      <span [class.font-weight-bold]="!n.read" class="text-gray-800" style="display: block; font-size: 0.85rem; line-height: 1.2;">
+                        {{ n.title }}
+                      </span>
+                      <small class="text-gray-600" style="font-size: 0.75rem;">{{ n.body }}</small>
+                    </div>
+                  </a>
+                </div>
+                <a class="dropdown-item text-center small text-gray-500 py-2 bg-light border-top" href="#" (click)="clearNotifications(); isNotificationDropdownOpen = false; $event.preventDefault()">
+                  Marcar todas como leídas
+                </a>
+              </div>
+            </li>
+
             <div class="topbar-divider d-none d-sm-block"></div>
 
             <li class="nav-item dropdown no-arrow" [class.show]="isUserDropdownOpen">
@@ -59,6 +165,11 @@
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isUserDropdownOpen"
                 aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" (click)="switchTab('perfil'); $event.preventDefault()">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Ver Perfil
+                </a>
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Cerrar Sesión
@@ -80,78 +191,547 @@
             </button>
           </div>
 
-          <!-- Content Row: Forms side by side -->
-          <div class="row">
-            <!-- Registrar Incidente Card (RF01) -->
-            <div class="col-lg-6" id="section-incidente">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex align-items-center">
-                  <i class="fas fa-exclamation-triangle text-danger mr-2" style="font-size: 1.25rem;"></i>
-                  <h6 class="m-0 font-weight-bold text-primary">Registro de Incidentes</h6>
-                </div>
-                <div class="card-body">
-                  <form (submit)="onSubmitIncident()">
-                    <div class="form-group">
-                      <label class="form-label">Lugar de la Incidencia:</label>
-                      <input type="text" class="form-control" name="incLab" [(ngModel)]="incLab"
-                        placeholder="Ej: Laboratorio 101, Biblioteca, Aula 204..." required>
+          <!-- TAB CONTENT: INICIO -->
+          <div *ngIf="activeTab === 'inicio'">
+            <!-- Welcome Jumbotron / Card -->
+            <div class="card shadow mb-4 border-left-primary bg-white" style="border-left-width: 5px !important;">
+              <div class="card-body py-3 text-dark">
+                <div class="d-flex align-items-center">
+                  <div class="mr-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; font-size: 1.7rem; background-color: #fbeae9; color: var(--primary-color);">
+                    <i class="fas fa-user-tie"></i>
+                  </div>
+                  <div>
+                    <h4 class="m-0 text-gray-900" style="font-weight: 800 !important; letter-spacing: -0.3px;">¡Bienvenido(a) a SIGSLAB, {{ user?.name }}!</h4>
+                    <div class="text-gray-700 mt-1" style="font-weight: 700 !important; font-size: 0.95rem;">
+                      Sistema Integral de Gestión de Soporte y Laboratorios
                     </div>
-                    <div class="form-group">
-                      <label class="form-label">Equipo Afectado:</label>
-                      <input type="text" class="form-control" name="incPc" [(ngModel)]="incPc"
-                        placeholder="Ej: PC-05, Impresora-01 o 'Ninguno'" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">Descripción del problema:</label>
-                      <textarea class="form-control" name="incDesc" [(ngModel)]="incDesc" rows="4"
-                        placeholder="Describa a detalle la falla técnica encontrada..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-danger btn-icon-split font-weight-bold">
-                      <span class="icon text-white-50">
-                        <i class="fas fa-bug"></i>
-                      </span>
-                      <span class="text">Reportar Incidente</span>
-                    </button>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Solicitud de Software Card (RF12) -->
-            <div class="col-lg-6" id="section-software">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex align-items-center">
-                  <i class="fas fa-download text-success mr-2" style="font-size: 1.25rem;"></i>
-                  <h6 class="m-0 font-weight-bold text-primary">Solicitud de Instalación de Software</h6>
+            <!-- Quick Actions Grid -->
+            <h5 class="font-weight-bold text-gray-800 mb-3"><i class="fas fa-bolt text-primary mr-1"></i>Acciones Rápidas</h5>
+            <div class="row">
+              <!-- Action: Reportar Incidente -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 hover-pointer border-bottom-brand" (click)="switchTab('registrar-incidente')" style="cursor: pointer;">
+                  <div class="card-body text-center d-flex flex-column align-items-center justify-content-center p-4">
+                    <div class="icon-circle text-white mb-3" style="width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background-color: var(--primary-color) !important;">
+                      <i class="fas fa-bug"></i>
+                    </div>
+                    <h6 class="font-weight-bold" style="color: #000000 !important; font-weight: 700 !important;">Reportar Falla</h6>
+                    <p class="small mb-0" style="color: #4e4e4e !important; font-weight: 400 !important;">Reporte problemas de hardware, red o equipos del laboratorio.</p>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <form (submit)="onSubmitSoftware()">
-                    <div class="form-group">
-                      <label class="form-label">Lugar de Destino (Instalación):</label>
-                      <input type="text" class="form-control" name="softLab" [(ngModel)]="softLab"
-                        placeholder="Ej: Laboratorio 201, Cómputo B..." required>
+              </div>
+
+              <!-- Action: Solicitar Software -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 hover-pointer border-bottom-brand" (click)="switchTab('solicitar-instalacion')" style="cursor: pointer;">
+                  <div class="card-body text-center d-flex flex-column align-items-center justify-content-center p-4">
+                    <div class="icon-circle text-white mb-3" style="width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background-color: var(--primary-color) !important;">
+                      <i class="fas fa-download"></i>
                     </div>
-                    <div class="form-group">
-                      <label class="form-label">Nombre del Software y Versión:</label>
-                      <input type="text" class="form-control" name="softName" [(ngModel)]="softName"
-                        placeholder="Ej: AutoCAD 2025, VS Code, Python 3.12" required>
+                    <h6 class="font-weight-bold" style="color: #000000 !important; font-weight: 700 !important;">Solicitar Software</h6>
+                    <p class="small mb-0" style="color: #4e4e4e !important; font-weight: 400 !important;">Instalación de paquetes de software y licencias para sus clases.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action: Solicitar Apertura -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 hover-pointer border-bottom-brand" (click)="switchTab('solicitar-apertura')" style="cursor: pointer;">
+                  <div class="card-body text-center d-flex flex-column align-items-center justify-content-center p-4">
+                    <div class="icon-circle text-white mb-3" style="width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background-color: var(--primary-color) !important;">
+                      <i class="fas fa-door-open"></i>
                     </div>
-                    <div class="form-group">
-                      <label class="form-label">Observaciones adicionales:</label>
-                      <textarea class="form-control" name="softObs" [(ngModel)]="softObs" rows="4"
-                        placeholder="Detalle si requiere librerías especiales, plugin de licencias, etc."></textarea>
+                    <h6 class="font-weight-bold" style="color: #000000 !important; font-weight: 700 !important;">Solicitar Apertura Lab</h6>
+                    <p class="small mb-0" style="color: #4e4e4e !important; font-weight: 400 !important;">Reserve la apertura del laboratorio para clases o talleres libres.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action: Chats de Soporte -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 hover-pointer border-bottom-brand" (click)="switchTab('chats')" style="cursor: pointer;">
+                  <div class="card-body text-center d-flex flex-column align-items-center justify-content-center p-4">
+                    <div class="icon-circle text-white mb-3" style="width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background-color: var(--primary-color) !important;">
+                      <i class="fas fa-comments"></i>
                     </div>
-                    <button type="submit" class="btn btn-success btn-icon-split font-weight-bold">
-                      <span class="icon text-white-50">
-                        <i class="fas fa-plus"></i>
-                      </span>
-                      <span class="text">Enviar Solicitud</span>
-                    </button>
-                  </form>
+                    <h6 class="font-weight-bold" style="color: #000000 !important; font-weight: 700 !important;">Chats de Soporte</h6>
+                    <p class="small mb-0" style="color: #4e4e4e !important; font-weight: 400 !important;">Comuníquese directamente con el técnico asignado a su ticket.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- TAB CONTENT: REGISTRAR INCIDENTE -->
+          <div *ngIf="activeTab === 'registrar-incidente'">
+            <div class="card shadow mb-4 border-left-danger bg-white" style="max-width: 700px; margin: 0 auto; border-left-width: 5px !important;">
+              <!-- Header Styled like the Welcome Card -->
+              <div class="card-header py-3 d-flex align-items-center bg-white border-bottom-0">
+                <div class="mr-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #fbeae9; color: var(--primary-color);">
+                  <i class="fas fa-bug"></i>
+                </div>
+                <h6 class="m-0 font-weight-bold text-gray-900 mr-auto" style="font-size: 1.1rem; letter-spacing: -0.3px;">Registrar Incidente</h6>
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #fbeae9; color: var(--primary-color);">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+              </div>
+              <div class="card-body text-dark pt-0">
+                <form (submit)="onSubmitIncident()">
+                  <!-- Environment Type Selection -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Tipo de ambiente de la incidencia:</label>
+                    <select class="form-control" name="tipoAmbiente" [(ngModel)]="tipoAmbiente" (change)="onAmbienteChange()" required style="color: #333; font-weight: 600;">
+                      <option value="Laboratorio">Laboratorio</option>
+                      <option value="Aula">Aula</option>
+                    </select>
+                  </div>
+
+                  <!-- Location Select Dropdown -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Lugar de la incidencia:</label>
+                    <select class="form-control" name="incLab" [(ngModel)]="incLab" required style="color: #333; font-weight: 600;">
+                      <ng-container *ngIf="tipoAmbiente === 'Laboratorio'">
+                        <option *ngFor="let lab of LABS" [value]="lab">{{ lab }}</option>
+                      </ng-container>
+                      <ng-container *ngIf="tipoAmbiente === 'Aula'">
+                        <option *ngFor="let aula of AULAS" [value]="aula">{{ aula }}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Categoría del Incidente (Falla detectada):</label>
+                    <select class="form-control" name="incCategory" [(ngModel)]="incCategory" required style="color: #333;">
+                      <option value="Cómputo">Equipo de Cómputo (CPU, Monitor)</option>
+                      <option value="Multimedia">Sistema Multimedia (Proyector, Audio)</option>
+                      <option value="Red">Conectividad y Red (Internet)</option>
+                      <option value="Eléctrico">Sistema Eléctrico (Enchufes)</option>
+                      <option value="Software">Software o Licenciamiento (Programas)</option>
+                      <option value="Periféricos">Periféricos (Teclado, Mouse)</option>
+                      <option value="Impresión">Dispositivos de Impresión (Impresora)</option>
+                      <option value="Otro">Otros (Especificar)</option>
+                    </select>
+                  </div>
+
+                  <!-- Campo de texto si se selecciona 'Otros' -->
+                  <div class="form-group" *ngIf="incCategory === 'Otro'">
+                    <label class="form-label font-weight-bold text-dark text-danger">Escriba el tipo de falla / categoría:</label>
+                    <input type="text" class="form-control" name="incCategoryOther" [(ngModel)]="incCategoryOther" 
+                           placeholder="Ej: Mobiliario dañado, Aire acondicionado, etc." required style="color: #333; font-weight: 600;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Equipo Afectado (PC / Tipo):</label>
+                    <select class="form-control" name="incPc" [(ngModel)]="incPc" required style="color: #333;">
+                      <option *ngFor="let eq of EQUIPOS" [value]="eq">{{ eq }}</option>
+                    </select>
+                  </div>
+
+                  <!-- Campo de texto si se selecciona 'Otro (Especificar)' -->
+                  <div class="form-group" *ngIf="incPc === 'Otro (Especificar)'">
+                    <label class="form-label font-weight-bold text-dark text-danger">Escriba el equipo afectado:</label>
+                    <input type="text" class="form-control" name="incPcOther" [(ngModel)]="incPcOther" 
+                           placeholder="Ej: Parlantes, Estabilizador, Ecran, etc." required style="color: #333; font-weight: 600;">
+                  </div>
+
+                  <!-- Continuity checkbox -->
+                  <div class="form-group custom-control custom-checkbox my-3">
+                    <input type="checkbox" class="custom-control-input" id="checkContinuidad" name="impideContinuidad" [(ngModel)]="impideContinuidad" (change)="onContinuidadChange()">
+                    <label class="custom-control-label text-dark font-weight-bold" for="checkContinuidad" style="cursor: pointer; font-size: 0.95rem;">
+                      ¿Impide la continuidad de las actividades?
+                    </label>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Prioridad Estimada:</label>
+                    <select class="form-control" name="incPriority" [(ngModel)]="incPriority" required style="color: #333;">
+                      <option value="Alta">Alta (Impide el dictado de la clase / continuidad)</option>
+                      <option value="Media">Media (Equipo de reserva inoperativo)</option>
+                      <option value="Baja">Baja (Requerimiento estético o de baja urgencia)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Descripción detallada del problema:</label>
+                    <textarea class="form-control" name="incDesc" [(ngModel)]="incDesc" rows="4"
+                      placeholder="Escriba a detalle la falla técnica encontrada..." required style="color: #333;"></textarea>
+                  </div>
+                  <div class="text-right">
+                    <button type="submit" class="btn btn-danger font-weight-bold">
+                      <i class="fas fa-save mr-1"></i> Reportar y Crear Ticket
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: CONSULTAR INCIDENTES -->
+          <div *ngIf="activeTab === 'consultar-incidentes'">
+            <div class="card shadow mb-4">
+              <div class="card-header py-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-list mr-2"></i>Consultar Incidentes</h6>
+                <button class="btn btn-sm btn-primary" (click)="loadMyTickets()">
+                  <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive" *ngIf="incidentTickets.length > 0; else emptyIncidents">
+                  <table class="table table-bordered table-striped" width="100%" cellspacing="0" style="font-size: 0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Código</th>
+                        <th>Lugar de la Incidencia</th>
+                        <th>Categoría</th>
+                        <th>Equipo Afectado</th>
+                        <th>Prioridad</th>
+                        <th>Fecha de Creación</th>
+                        <th>Estado Actual</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let t of incidentTickets">
+                        <td><strong>{{ t.id }}</strong></td>
+                        <td>{{ t.lab }}</td>
+                        <td>{{ t.title }}</td>
+                        <td><code>{{ t.pc }}</code></td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                            'badge-danger': t.priority === 'Alta',
+                            'badge-warning': t.priority === 'Media',
+                            'badge-info': t.priority === 'Baja'
+                          }">{{ t.priority }}</span>
+                        </td>
+                        <td>{{ t.createdDate }}</td>
+                        <td>
+                          <span class="badge text-white" [ngClass]="{
+                            'badge-danger': t.status === 'Pendiente',
+                            'badge-primary': t.status === 'Asignado' || t.status === 'En proceso',
+                            'badge-success': t.status === 'Finalizado'
+                          }">{{ t.status === 'Asignado' ? 'En proceso' : t.status }}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <ng-template #emptyIncidents>
+                  <div class="text-center py-5 text-muted">
+                    <i class="fas fa-check-circle fa-3x mb-3 text-gray-300"></i>
+                    <h5>No tienes incidentes reportados</h5>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: SOLICITAR INSTALACION -->
+          <div *ngIf="activeTab === 'solicitar-instalacion'">
+            <div class="card shadow mb-4 border-left-primary bg-white" style="max-width: 700px; margin: 0 auto; border-left-width: 5px !important;">
+              <!-- Header Styled like the Incident Card -->
+              <div class="card-header py-3 d-flex align-items-center bg-white border-bottom-0">
+                <div class="mr-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #fbeae9; color: var(--primary-color);">
+                  <i class="fas fa-download"></i>
+                </div>
+                <h6 class="m-0 font-weight-bold text-gray-900 mr-auto" style="font-size: 1.1rem; letter-spacing: -0.3px;">Instalar Software</h6>
+              </div>
+              <div class="card-body text-dark pt-0">
+                <form (submit)="onSubmitSoftware()">
+                  <!-- Environment Type Selection -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Tipo de ambiente de la incidencia:</label>
+                    <select class="form-control" name="softTipoAmbiente" [(ngModel)]="softTipoAmbiente" (change)="onSoftAmbienteChange()" required style="color: #333; font-weight: 600;">
+                      <option value="Laboratorio">Laboratorio</option>
+                      <option value="Aula">Aula</option>
+                    </select>
+                  </div>
+
+                  <!-- Location Select Dropdown -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Lugar de la incidencia:</label>
+                    <select class="form-control" name="softLab" [(ngModel)]="softLab" required style="color: #333; font-weight: 600;">
+                      <ng-container *ngIf="softTipoAmbiente === 'Laboratorio'">
+                        <option *ngFor="let lab of LABS" [value]="lab">{{ lab }}</option>
+                      </ng-container>
+                      <ng-container *ngIf="softTipoAmbiente === 'Aula'">
+                        <option *ngFor="let aula of AULAS" [value]="aula">{{ aula }}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Software a Instalar y Versión:</label>
+                    <input type="text" class="form-control" name="softName" [(ngModel)]="softName"
+                      placeholder="Ej: AutoCAD 2025, VS Code + Python SDK, Eclipse 2024" required style="color: #333;">
+                  </div>
+
+                  <!-- Required Date field replacing Priority -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Fecha en la que se necesita:</label>
+                    <input type="date" class="form-control" name="softDateNeeded" [(ngModel)]="softDateNeeded" required style="color: #333; font-weight: 600;">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Observaciones adicionales / Instrucciones:</label>
+                    <textarea class="form-control" name="softObs" [(ngModel)]="softObs" rows="4"
+                      placeholder="Escriba requerimientos particulares de la licencia o paquetes..." style="color: #333;"></textarea>
+                  </div>
+                  <div class="text-right">
+                    <button type="submit" class="btn btn-primary font-weight-bold">
+                      <i class="fas fa-save mr-1"></i> Enviar Solicitud
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: SOLICITAR APERTURA -->
+          <div *ngIf="activeTab === 'solicitar-apertura'">
+            <div class="card shadow mb-4 border-left-primary bg-white" style="max-width: 700px; margin: 0 auto; border-left-width: 5px !important;">
+              <!-- Header Styled like the Incident Card -->
+              <div class="card-header py-3 d-flex align-items-center bg-white border-bottom-0">
+                <div class="mr-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.25rem; background-color: #fbeae9; color: var(--primary-color);">
+                  <i class="fas fa-door-open"></i>
+                </div>
+                <h6 class="m-0 font-weight-bold text-gray-900 mr-auto" style="font-size: 1.1rem; letter-spacing: -0.3px;">Solicitar Apertura</h6>
+              </div>
+              <div class="card-body text-dark pt-0">
+                <form (submit)="onSubmitApertura()">
+                  <!-- Laboratory Select Dropdown -->
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Laboratorio Solicitado:</label>
+                    <select class="form-control" name="openLab" [(ngModel)]="openLab" required style="color: #333; font-weight: 600;">
+                      <option *ngFor="let lab of LABS" [value]="lab">{{ lab }}</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label font-weight-bold text-dark">Actividad o Motivo:</label>
+                    <input type="text" class="form-control" name="openActivity" [(ngModel)]="openActivity"
+                      placeholder="Ej: Examen parcial de Redes, Práctica libre de telecomunicaciones" required style="color: #333;">
+                  </div>
+
+                  <!-- Date and Time selector menu -->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label class="form-label font-weight-bold text-dark">Fecha propuesta:</label>
+                      <input type="date" class="form-control" name="openDate" [(ngModel)]="openDate" required style="color: #333; font-weight: 600;">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="form-label font-weight-bold text-dark">Hora propuesta:</label>
+                      <input type="time" class="form-control" name="openTimeStr" [(ngModel)]="openTimeStr" required style="color: #333; font-weight: 600;">
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <button type="submit" class="btn btn-primary font-weight-bold">
+                      <i class="fas fa-save mr-1"></i> Enviar Solicitud de Apertura
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: CONSULTAR SOLICITUDES -->
+          <div *ngIf="activeTab === 'consultar-solicitudes'">
+            <div class="card shadow mb-4">
+              <div class="card-header py-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-list-alt mr-2"></i>Consultar Solicitudes</h6>
+                <button class="btn btn-sm btn-primary" (click)="loadMyTickets()">
+                  <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive" *ngIf="requestTickets.length > 0; else emptyRequests">
+                  <table class="table table-bordered table-striped" width="100%" cellspacing="0" style="font-size: 0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Código</th>
+                        <th>Tipo de Solicitud</th>
+                        <th>Título / Detalle</th>
+                        <th>Laboratorio / Lugar</th>
+                        <th>Prioridad</th>
+                        <th>Fecha de Creación</th>
+                        <th>Estado Actual</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let t of requestTickets">
+                        <td><strong>{{ t.id }}</strong></td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                            'badge-success': t.type === 'Solicitud de instalación',
+                            'badge-info': t.type === 'Solicitud de apertura'
+                          }">{{ t.type }}</span>
+                        </td>
+                        <td>{{ t.title }}</td>
+                        <td>{{ t.lab }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                            'badge-danger': t.priority === 'Alta',
+                            'badge-warning': t.priority === 'Media',
+                            'badge-info': t.priority === 'Baja'
+                          }">{{ t.priority }}</span>
+                        </td>
+                        <td>{{ t.createdDate }}</td>
+                        <td>
+                          <span class="badge text-white" [ngClass]="{
+                            'badge-danger': t.status === 'Pendiente',
+                            'badge-primary': t.status === 'Asignado' || t.status === 'En proceso',
+                            'badge-success': t.status === 'Finalizado'
+                          }">{{ t.status === 'Asignado' ? 'En proceso' : t.status }}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <ng-template #emptyRequests>
+                  <div class="text-center py-5 text-muted">
+                    <i class="fas fa-check-circle fa-3x mb-3 text-gray-300"></i>
+                    <h5>No tienes solicitudes registradas</h5>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: CHATS DE SOPORTE -->
+          <div *ngIf="activeTab === 'chats'">
+            <div class="card shadow mb-4" style="height: 600px; overflow: hidden; border-radius: 8px;">
+              <div class="row no-gutters h-100">
+                
+                <!-- Left Side: Active Chat Window (width: 70% / col-8) -->
+                <div class="col-md-8 d-flex flex-column h-100 bg-white" style="border-right: 1px solid #e3e6f0;">
+                  <ng-container *ngIf="selectedChatTicket; else selectChatPlaceholder">
+                    
+                    <!-- Chat Header -->
+                    <div class="py-3 px-4 border-bottom d-flex justify-content-between align-items-center" style="background-color: #f8f9fc;">
+                      <div>
+                        <h6 class="m-0 font-weight-bold text-gray-900">{{ selectedChatTicket.id }} - {{ selectedChatTicket.title }}</h6>
+                      </div>
+                      <button class="btn btn-sm btn-light border" (click)="loadMyTickets()">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                      </button>
+                    </div>
+                    
+                    <!-- Message History -->
+                    <div class="p-4 flex-grow-1 chat-history" style="overflow-y: auto; background-color: #f4f6f9; display: flex; flex-direction: column;">
+                      <div *ngIf="selectedChatTicket.chat.length === 0" class="text-center text-muted my-auto">
+                        <i class="fas fa-comments fa-3x mb-2 text-gray-400"></i>
+                        <p class="m-0 font-weight-bold text-dark">No hay mensajes en este chat.</p>
+                        <p class="m-0 small text-gray-600">¡Escriba un mensaje para comenzar la conversación!</p>
+                        <p class="small text-warning mt-2" *ngIf="!selectedChatTicket.assignedTo"><i class="fas fa-exclamation-triangle"></i> Debe esperar a que el Jefe de Soporte asigne un técnico para recibir respuestas.</p>
+                      </div>
+                      
+                      <div *ngFor="let msg of selectedChatTicket.chat" 
+                           class="mb-3 d-flex flex-column"
+                           [ngClass]="msg.sender === user?.email ? 'align-items-end' : 'align-items-start'">
+                        <div class="px-3 py-2 rounded shadow-sm text-white" 
+                             [ngStyle]="{'background-color': msg.sender === user?.email ? 'var(--primary-color)' : '#6c757d'}"
+                             style="max-width: 70%; word-break: break-word;">
+                          <div class="small font-weight-bold mb-1" style="font-size: 0.75rem; opacity: 0.8;">{{ msg.senderName }}</div>
+                          <div style="font-size: 0.9rem;">{{ msg.content }}</div>
+                          <div class="text-right small mt-1" style="font-size: 0.65rem; opacity: 0.6;">{{ msg.timestamp }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Message input box -->
+                    <div class="p-3 bg-white border-top">
+                      <form (submit)="sendChatMessage(); $event.preventDefault()">
+                        <div class="input-group">
+                          <input type="text" class="form-control" name="chatMessageText" [(ngModel)]="chatMessageText"
+                            placeholder="Escriba aquí su mensaje..." required style="color: #333;" [disabled]="!selectedChatTicket.assignedTo">
+                          <div class="input-group-append">
+                            <button class="btn btn-danger font-weight-bold" type="submit" [disabled]="!selectedChatTicket.assignedTo">
+                              <i class="fas fa-paper-plane mr-1"></i> Enviar
+                            </button>
+                          </div>
+                        </div>
+                        <small class="text-muted mt-1 d-block" *ngIf="!selectedChatTicket.assignedTo">
+                          <i class="fas fa-info-circle text-danger mr-1"></i> El chat se habilitará una vez que se asigne un técnico.
+                        </small>
+                      </form>
+                    </div>
+                  </ng-container>
+                  
+                  <ng-template #selectChatPlaceholder>
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center text-muted p-5 bg-white">
+                      <i class="fas fa-comments fa-4x mb-3 text-gray-300"></i>
+                      <h5 class="text-gray-900 font-weight-bold">Selecciona una conversación</h5>
+                      <p class="m-0 text-gray-600">Haz clic en una conversación del listado lateral derecho para abrir el chat de soporte técnico.</p>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <!-- Right Side: Conversations Sidebar (width: 30% / col-4) -->
+                <div class="col-md-4 d-flex flex-column h-100 bg-light" style="border-left: 1px solid #e3e6f0;">
+                  <div class="py-3 px-3 border-bottom d-flex align-items-center bg-white">
+                    <h6 class="m-0 font-weight-bold text-gray-900"><i class="fas fa-comments mr-2 text-danger"></i>Conversaciones</h6>
+                  </div>
+                  <div class="list-group list-group-flush flex-grow-1" style="overflow-y: auto; max-height: 540px;">
+                    <a *ngFor="let t of getChatTickets()" 
+                       href="#" 
+                       (click)="selectedChatTicket = t; $event.preventDefault()"
+                       class="list-group-item list-group-item-action d-flex flex-column align-items-start py-3"
+                       [ngStyle]="{'background-color': selectedChatTicket?.id === t.id ? '#e9ecef' : 'transparent'}"
+                       style="border-bottom: 1px solid rgba(0,0,0,0.07);">
+                      <div class="d-flex w-100 justify-content-between mb-1">
+                        <span class="small font-weight-bold text-gray-900" style="font-weight: 700;">{{ t.id }}</span>
+                        <span class="badge text-white" [ngClass]="{
+                          'badge-danger': t.status === 'Pendiente',
+                          'badge-primary': t.status === 'Asignado' || t.status === 'En proceso'
+                        }">{{ t.status === 'Asignado' ? 'En proceso' : t.status }}</span>
+                      </div>
+                      <h6 class="font-weight-bold mb-1 text-gray-900" style="font-weight: 700;">{{ t.title }}</h6>
+                      <p class="mb-1 text-gray-800 small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; font-weight: 500;">
+                        {{ getLastChatMessage(t) ? getLastChatMessage(t)?.content : 'Sin mensajes aún.' }}
+                      </p>
+                      <small class="text-gray-700" style="font-weight: 500; font-size: 0.75rem;">
+                        Técnico: {{ t.assignedTo || 'No asignado aún' }} 
+                        <span class="float-right font-weight-bold">{{ getLastChatMessage(t) ? getLastChatMessage(t)?.timestamp : t.createdDate }}</span>
+                      </small>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: MI PERFIL -->
+          <div *ngIf="activeTab === 'perfil'">
+            <div class="card shadow mb-4" style="max-width: 500px; margin: 0 auto;">
+              <div class="card-header py-3 bg-secondary text-white">
+                <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user-circle mr-2"></i>Información del Perfil</h6>
+              </div>
+              <div class="card-body text-center">
+                <img class="img-profile rounded-circle mb-3 shadow" src="assets/img/undraw_profile.svg" style="width: 120px; height: 120px;">
+                <h5 class="font-weight-bold text-gray-900 mb-1">{{ user?.name }}</h5>
+                <p class="badge badge-pill badge-secondary font-weight-bold text-uppercase px-3 py-2 mb-4" style="font-size: 0.85rem;">{{ user?.role }}</p>
+                
+                <table class="table table-bordered text-left" style="font-size: 0.9rem;">
+                  <tr>
+                    <th style="width: 40%;">Correo Electrónico:</th>
+                    <td class="text-dark">{{ user?.email }}</td>
+                  </tr>
+                  <tr>
+                    <th>Rol en SIGSLAB:</th>
+                    <td class="text-dark">Docente Autorizado</td>
+                  </tr>
+                  <tr>
+                    <th>Estado de Cuenta:</th>
+                    <td class="text-success font-weight-bold">Activo</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
         </div>
         <!-- /.container-fluid -->
       </div>
@@ -161,7 +741,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>SIGSLAB MVP 1 &copy; 2026</span>
+            <span>SIGSLAB &copy; 2026</span>
           </div>
         </div>
       </footer>
@@ -169,4 +749,120 @@
     </div>
     <!-- End of Content Wrapper -->
   </div>
+
+  <!-- Ticket Detail Modal -->
+  <div class="modal fade show" style="display: block;" role="dialog" *ngIf="isDetailOpen">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content shadow-lg border-left-primary">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold text-primary" id="detailModalLabel">
+            <i class="fas fa-ticket-alt mr-2"></i>Detalle Completo del Ticket {{ selectedTicket?.id }}
+          </h5>
+          <button class="close" type="button" (click)="closeTicketDetail()" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="selectedTicket">
+          <!-- Ticket Information Card -->
+          <div class="row">
+            <div class="col-md-7">
+              <h6 class="font-weight-bold text-gray-800">Requerimiento:</h6>
+              <h5 class="text-dark font-weight-bold mb-3">{{ selectedTicket.title }}</h5>
+
+              <table class="table table-bordered table-sm" style="font-size: 0.85rem;">
+                <tr>
+                  <th style="width: 35%;">Tipo:</th>
+                  <td><span class="badge badge-light border text-dark">{{ selectedTicket.type }}</span></td>
+                </tr>
+                <tr>
+                  <th>Estado Actual:</th>
+                  <td>
+                    <span class="badge text-white" [ngClass]="{
+                      'badge-danger': selectedTicket.status === 'Pendiente',
+                      'badge-primary': selectedTicket.status === 'Asignado' || selectedTicket.status === 'En proceso',
+                      'badge-success': selectedTicket.status === 'Finalizado'
+                    }">{{ selectedTicket.status === 'Asignado' ? 'En proceso' : selectedTicket.status }}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Prioridad:</th>
+                  <td>
+                    <span class="badge text-white font-weight-bold" [ngClass]="{
+                      'badge-danger': selectedTicket.priority === 'Alta',
+                      'badge-warning': selectedTicket.priority === 'Media',
+                      'badge-info': selectedTicket.priority === 'Baja'
+                    }">{{ selectedTicket.priority }}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Ubicación:</th>
+                  <td class="text-dark">{{ selectedTicket.lab }}</td>
+                </tr>
+                <tr>
+                  <th>PC Afectada:</th>
+                  <td><code>{{ selectedTicket.pc }}</code></td>
+                </tr>
+                <tr>
+                  <th>Fecha Reporte:</th>
+                  <td class="text-dark">{{ selectedTicket.createdDate }}</td>
+                </tr>
+                <tr *ngIf="selectedTicket.endDate">
+                  <th>Fecha Finalización:</th>
+                  <td class="text-success font-weight-bold">{{ selectedTicket.endDate }}</td>
+                </tr>
+                <tr>
+                  <th>Técnico Asignado:</th>
+                  <td class="font-weight-bold text-gray-800">{{ selectedTicket.assignedTo || 'No asignado aún' }}</td>
+                </tr>
+              </table>
+              
+              <h6 class="font-weight-bold text-gray-800 mt-3">Descripción:</h6>
+              <div class="p-2 bg-light rounded text-dark" style="font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); min-height: 60px; white-space: pre-wrap;">
+                {{ selectedTicket.description }}
+              </div>
+              
+              <!-- Technical diagnostics & actions if finished -->
+              <div *ngIf="selectedTicket.status === 'Finalizado' || selectedTicket.correctiveAction" class="mt-3">
+                <h6 class="font-weight-bold text-success"><i class="fas fa-toolbox mr-1"></i>Detalles del Cierre Técnico:</h6>
+                <table class="table table-bordered table-sm" style="font-size: 0.85rem; background-color: #fcfdfa;">
+                  <tr *ngIf="selectedTicket.diagnostic">
+                    <th style="width: 35%;">Diagnóstico:</th>
+                    <td class="text-dark">{{ selectedTicket.diagnostic }}</td>
+                  </tr>
+                  <tr>
+                    <th>Acciones Realizadas:</th>
+                    <td class="text-dark"><strong>{{ selectedTicket.correctiveAction }}</strong></td>
+                  </tr>
+                  <tr *ngIf="selectedTicket.observations">
+                    <th>Observaciones:</th>
+                    <td class="text-dark">{{ selectedTicket.observations }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- History log column -->
+            <div class="col-md-5">
+              <h6 class="font-weight-bold text-primary"><i class="fas fa-history mr-1"></i>Bitácora de Seguimiento (Auditoría)</h6>
+              <div class="list-group" style="max-height: 350px; overflow-y: auto; font-size: 0.75rem;">
+                <div *ngFor="let log of selectedTicket.history" class="list-group-item list-group-item-action flex-column align-items-start p-2">
+                  <div class="d-flex w-100 justify-content-between mb-1">
+                    <span class="badge badge-secondary">{{ log.action }}</span>
+                    <small class="text-muted">{{ log.date }}</small>
+                  </div>
+                  <p class="mb-1 text-dark" style="line-height: 1.3;">{{ log.description }}</p>
+                  <small class="text-gray-500">Ejecutor: {{ log.user }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary font-weight-bold" type="button" (click)="closeTicketDetail()">Cerrar Detalles</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isDetailOpen"></div>
 </div>

@@ -7,18 +7,18 @@
     --dark-bg: #1f0406;            /* Deep Wine-Black */
     --black-color: #0a0102;        /* Pure Black accent */
     
-    /* Harmonized Status Colors */
-    --status-pending: #c59b27;     /* Amber Gold (replaces bright yellow) */
-    --status-pending-hover: #ab851d;
+    /* Harmonized Status Colors (All dark red / grey) */
+    --status-pending: #9c3034;     /* Medium Brick Red */
+    --status-pending-hover: #802327;
     
-    --status-process: #b04c63;     /* Crimson Rose (replaces bright blue) */
-    --status-process-hover: #963b51;
+    --status-process: #851b1e;     /* Crimson Red */
+    --status-process-hover: #671215;
     
-    --status-solved: #346e6a;      /* Dark Teal/Pine (replaces bright green) */
-    --status-solved-hover: #26524f;
+    --status-solved: #4c0f11;      /* Deep Burgundy Wine */
+    --status-solved-hover: #35090a;
     
-    --status-rejected: #8c2525;    /* Deep Brick Red (replaces bright red) */
-    --status-rejected-hover: #6e1c1c;
+    --status-rejected: #701618;    /* Crimson Wine */
+    --status-rejected-hover: #400d10;
 }
 
 /* Sidebar and login background gradients */
@@ -112,8 +112,12 @@
     color: var(--status-rejected) !important;
 }
 .badge-success-soft {
-    background-color: #eaf4f3 !important;
+    background-color: #f5dedf !important;
     color: var(--status-solved) !important;
+}
+.badge-info-soft {
+    background-color: #e9e9eb !important;
+    color: var(--status-pending) !important;
 }
 
 /* Ticket Status Soft Badges */
@@ -123,12 +127,12 @@
     font-weight: bold;
 }
 .badge-ticket-asignado {
-    background-color: #fef7e0 !important;
+    background-color: #f5dedf !important;
     color: var(--status-pending) !important;
     font-weight: bold;
 }
 .badge-ticket-finalizado {
-    background-color: #eaf4f3 !important;
+    background-color: #e9e9eb !important;
     color: var(--status-solved) !important;
     font-weight: bold;
 }
@@ -178,4 +182,13 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i');
 body {
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.hover-pointer {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-pointer:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0.5rem 1.5rem rgba(112, 22, 24, 0.15) !important;
 }

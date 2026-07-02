@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, from } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
 import { User } from '../models/user.model';
-import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private supabase: SupabaseService, private router: Router) { }
+  private readonly MOCK_USERS: (User & { password?: string })[] = [
+    { email: 'docente@sigslab.com', password: '123', name: 'Dr. Héctor Flores', role: 'docente' },
+    { email: 'jefe@sigslab.com', password: '123', name: 'Ing. Laura Ruíz', role: 'jefe-soporte' },
+    { email: 'juan.perez@sigslab.com', password: '123', name: 'Juan Pérez (Bolsista)', role: 'tecnico' },
+    { email: 'maria.gomez@sigslab.com', password: '123', name: 'María Gómez (Técnico)', role: 'tecnico' },
+    { email: 'carlos.lopez@sigslab.com', password: '123', name: 'Carlos López (Bolsista)', role: 'tecnico' }
+  ];
+
+  constructor(private router: Router) { }
 
   getCurrentUser(): User | null {
     const userJson = localStorage.getItem('currentUser');
@@ -26,54 +32,31 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return from(
-      this.supabase.client.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password: password
-      })
-    ).pipe(
-      switchMap(({ data, error }) => {
-        if (error) {
-          throw new Error(error.message);
-        }
-        if (!data.user) {
-          throw new Error('Usuario no encontrado.');
-        }
-        // Obtener el perfil extendido (nombre, rol) desde la tabla de perfiles
-        return from(
-          this.supabase.client
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .single()
-        );
-      }),
-      map(({ data, error }) => {
-        if (error || !data) {
-          throw new Error(error?.message || 'Error al obtener el perfil de usuario.');
-        }
-        const loggedUser: User = {
-          email: data.email,
-          name: data.name,
-          role: data.role as 'docente' | 'jefe-soporte' | 'tecnico'
-        };
-        this.setCurrentUser(loggedUser);
-        return loggedUser;
-      })
-    );
+    const cleanEmail = email.trim().toLowerCase();
+    const user = this.MOCK_USERS.find(u => u.email === cleanEmail);
+
+    if (!user) {
+      return throwError(() => new Error('Usuario no encontrado.'));
+    }
+
+    if (user.password !== password) {
+      return throwError(() => new Error('Contraseña incorrecta.'));
+    }
+
+    // Retornar clon de usuario sin la contraseña
+    const loggedUser: User = {
+      email: user.email,
+      name: user.name,
+      role: user.role
+    };
+
+    this.setCurrentUser(loggedUser);
+    return of(loggedUser);
   }
 
   logout(): void {
-    from(this.supabase.client.auth.signOut()).subscribe({
-      next: () => {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
-      }
-    });
+    localStorage.removeItem('currentUser');
+    this.router.navigate(['/login']);
   }
 
   checkAuth(allowedRole: 'docente' | 'jefe-soporte' | 'tecnico'): boolean {
